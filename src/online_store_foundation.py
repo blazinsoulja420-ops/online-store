@@ -26,3 +26,12 @@ def order_state(offer: ProductOffer) -> OrderState:
 
 def live_provider_activation_allowed() -> bool:
     return False
+@dataclass(frozen=True)
+class DraftOrder:
+    offer: ProductOffer
+    quantity: int
+
+def validate_draft_order(order: DraftOrder) -> OrderState:
+    if order.quantity <= 0:
+        return OrderState.BLOCKED
+    return order_state(order.offer)
