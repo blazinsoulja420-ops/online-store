@@ -12,3 +12,8 @@ def test_order_validation_and_live_activation_gate():
     assert order_state(ProductOffer("sku","supplier:item",500))==OrderState.READY
     assert order_state(ProductOffer("sku","",500))==OrderState.BLOCKED
     assert live_provider_activation_allowed() is False
+def test_draft_order_is_provider_neutral_and_fail_closed():
+    from online_store_foundation import DraftOrder, OrderState, ProductOffer, validate_draft_order
+    offer=ProductOffer("sku","supplier:item",500)
+    assert validate_draft_order(DraftOrder(offer,1))==OrderState.READY
+    assert validate_draft_order(DraftOrder(offer,0))==OrderState.BLOCKED
