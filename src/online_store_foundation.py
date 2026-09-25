@@ -15,7 +15,14 @@ def may_spend_money(environment: Environment) -> bool:
     return False
 
 def valid_offer(offer: ProductOffer) -> bool:
-    return bool(offer.sku and offer.supplier_ref and offer.price_cents >= 0)
+    return bool(
+        isinstance(offer.sku, str)
+        and bool(offer.sku.strip())
+        and isinstance(offer.supplier_ref, str)
+        and bool(offer.supplier_ref.strip())
+        and type(offer.price_cents) is int
+        and offer.price_cents >= 0
+    )
 class OrderState(str, Enum):
     DRAFT="draft"
     READY="ready"
@@ -32,6 +39,6 @@ class DraftOrder:
     quantity: int
 
 def validate_draft_order(order: DraftOrder) -> OrderState:
-    if order.quantity <= 0:
+    if type(order.quantity) is not int or order.quantity <= 0:
         return OrderState.BLOCKED
     return order_state(order.offer)
