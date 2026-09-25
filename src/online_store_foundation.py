@@ -16,8 +16,10 @@ def may_spend_money(environment: Environment) -> bool:
 
 def valid_offer(offer: ProductOffer) -> bool:
     return bool(
-        offer.sku.strip()
-        and offer.supplier_ref.strip()
+        isinstance(offer.sku, str)
+        and bool(offer.sku.strip())
+        and isinstance(offer.supplier_ref, str)
+        and bool(offer.supplier_ref.strip())
         and type(offer.price_cents) is int
         and offer.price_cents >= 0
     )
