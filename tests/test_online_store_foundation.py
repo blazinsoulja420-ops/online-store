@@ -17,3 +17,18 @@ def test_draft_order_is_provider_neutral_and_fail_closed():
     offer=ProductOffer("sku","supplier:item",500)
     assert validate_draft_order(DraftOrder(offer,1))==OrderState.READY
     assert validate_draft_order(DraftOrder(offer,0))==OrderState.BLOCKED
+
+
+def test_offer_rejects_blank_ids_and_noninteger_price():
+    assert not valid_offer(ProductOffer("  ", "supplier:item", 500))
+    assert not valid_offer(ProductOffer("sku", "  ", 500))
+    assert not valid_offer(ProductOffer("sku", "supplier:item", True))
+    assert not valid_offer(ProductOffer("sku", "supplier:item", 12.5))
+
+
+def test_draft_order_requires_positive_integer_quantity():
+    from math import nan
+    from online_store_foundation import DraftOrder, OrderState, validate_draft_order
+    offer = ProductOffer("sku", "supplier:item", 500)
+    for quantity in (-1, 0, True, 1.5, nan, "2"):
+        assert validate_draft_order(DraftOrder(offer, quantity)) == OrderState.BLOCKED
