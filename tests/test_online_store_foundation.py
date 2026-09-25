@@ -24,6 +24,8 @@ def test_offer_rejects_blank_ids_and_noninteger_price():
     assert not valid_offer(ProductOffer("sku", "  ", 500))
     assert not valid_offer(ProductOffer("sku", "supplier:item", True))
     assert not valid_offer(ProductOffer("sku", "supplier:item", 12.5))
+    assert not valid_offer(ProductOffer(None, "supplier:item", 500))
+    assert not valid_offer(ProductOffer("sku", None, 500))
 
 
 def test_draft_order_requires_positive_integer_quantity():
